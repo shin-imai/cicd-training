@@ -1,5 +1,5 @@
 podTemplate(containers: [
-    containerTemplate(name: 'kaniko', image: 'kaniko', ttyEnabled: true, command: 'cat')
+    containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:debug', ttyEnabled: true, command: 'cat')
   ]) {
 
     node(POD_LABEL) {
