@@ -4,7 +4,7 @@ podTemplate(containers: [
 
     node(POD_LABEL) {
         stage('Get a Golang project') {
-            git url: https://github.com/shin-imai/cicd-training.git
+            git url: "https://github.com/shin-imai/cicd-training.git"
             container('kaniko') {
                 stage('Build a Go project') {
                 sh"""#!/busybox/sh
