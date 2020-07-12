@@ -3,10 +3,12 @@ podTemplate(containers: [
   ]) {
 
     node(POD_LABEL) {
-        stage('Get a Golang project') {
-            git url: "https://github.com/shin-imai/cicd-training.git"
+        stage("Checkout"){
+            checkout(scm)
+        }
+        stage('kaniko job') {
             container('kaniko') {
-                stage('Build a Go project') {
+                stage('Build the image') {
                 sh"""#!/busybox/sh
                 /kaniko/executor -f ./dockerfile -c `pwd` --insecure --destination=registry.default.svc.cluster.local/bjss-node:1.0.0
                 """
