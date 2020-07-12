@@ -4,7 +4,7 @@ podTemplate(containers: [
 
     node(POD_LABEL) {
         stage('Get a Golang project') {
-            container('golang') {
+            container('kaniko') {
                 stage('Build a Go project') {
                 sh"""#!/busybox/sh
                 /kaniko/executor -f ./dockerfile -c `pwd` —destination=10.10.110.170:5000/bjss-node:1.0.0
