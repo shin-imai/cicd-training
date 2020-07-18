@@ -34,13 +34,13 @@ podTemplate(containers: [
             sh(script: "test/test.sh")
         }
 
-        if(! BRANCH_NAME.startsWith("PR-")){
+        if(BRANCH_NAME.startsWith("PR-")){
             stage("push"){
                 withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
                     sh"""
                     env
                     git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
-                    git push -u github ${BRANCH_NAME}
+                    git push -u github ${CHANGE_BRANCH}
                     """
                 }
             }
