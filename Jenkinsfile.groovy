@@ -10,7 +10,8 @@ podTemplate(containers: [
             container('kaniko') {
                 stage('Build the image') {
                 sh"""#!/busybox/sh
-                /kaniko/executor -f ./dockerfile -c `pwd` --destination=registry.default.svc.cluster.local/bjss-node:1.0.0 --verbosity=debug
+                ls
+                #/kaniko/executor -f ./dockerfile -c `pwd` --destination=registry.default.svc.cluster.local/bjss-node:1.0.0 --verbosity=debug
                 """
                 }
             }
