@@ -1,4 +1,6 @@
-#!/bin/bash
+#!/bin/sh
+
+set -ex
 
 WORD=$(curl -fsq http://localhost:3000)
 
