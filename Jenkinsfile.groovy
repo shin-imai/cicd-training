@@ -35,23 +35,28 @@ podTemplate(containers: [
         }
 
         if(BRANCH_NAME.startsWith("PR-")){
-            stage("push"){
-                withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
+            withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
+                stage("push"){
                     sh"""
-                    env
                     git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
                     git checkout -b ${CHANGE_BRANCH}
-                    git branch -a
-                    git remote -v
                     git push -u github ${CHANGE_BRANCH}
                     """
                 }
-            }
 
-            stage("Create PR"){
-                sh"""
-                env
-                """
+                stage("Create PR"){
+                    sh"""
+                    curl -XPOST -d@- -H "Content-Type: application/json" -H "Authorization: Token ${PAT}" 'https://api.github.com/repos/shin-imai/cicd-training/pulls' <<EOF
+{
+  "title": "Amazing new feature",
+  "body": "Please pull these awesome changes in!",
+  "head": "${CHANGE_BRANCH}",
+  "base": "${CHANGE_TARGET}"
+}
+
+EOF
+                    """
+                }
             }
         }
     }
