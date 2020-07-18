@@ -31,7 +31,7 @@ podTemplate(containers: [
             sh(script: "test/test.sh")
         }
 
-        if(! BRANCH_NAME.startWith("PR-"){
+        if(! BRANCH_NAME.startWith("PR-")){
             stage("push"){
                 withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
                     sh"""
