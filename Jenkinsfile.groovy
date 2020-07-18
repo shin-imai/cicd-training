@@ -42,7 +42,7 @@ podTemplate(containers: [
                     git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
                     git branch -a
                     git fetch github 
-                    git diff github/${CHANGE_BRANCH} ${CHANGE_BRANCH}
+                    git reset --hard HEAD^1
                     git push -u github ${CHANGE_BRANCH}
                     """
                 }
