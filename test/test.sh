@@ -2,11 +2,10 @@
 
 set -ex
 
-WORD=$(curl -fsq http://localhost:3000)
+curl -fsq http://localhost:3000 | grep -sq "Hello World"
 
-if [[ "$WORD" != "Hello World" ]];then
+if [ $? -ne 0 ]];then
   echo "Failed"
   exit 1
 fi
 
-exit 0
