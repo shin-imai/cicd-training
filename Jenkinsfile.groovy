@@ -40,10 +40,10 @@ podTemplate(containers: [
                     sh"""
                     env
                     git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
-                    git checkout ${CHANGE_BRANCH}
+                    git checkout -b ${CHANGE_BRANCH}
                     git branch -a
                     git remote -v
-                    git push -u github/${CHANGE_BRANCH} ${CHANGE_BRANCH}
+                    git push -u github ${CHANGE_BRANCH}
                     """
                 }
             }
