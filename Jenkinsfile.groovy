@@ -42,7 +42,7 @@ podTemplate(containers: [
                     git checkout -b ${CHANGE_BRANCH}
                     git branch -a
                     git pull --all
-                    git diff github/${CHANGE_BRANCH} origin/${CHANGE_BRANCH}
+                    git diff github/${CHANGE_BRANCH} ${CHANGE_BRANCH}
                     git push -u github ${CHANGE_BRANCH}
                     """
                 }
