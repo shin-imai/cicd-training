@@ -1,3 +1,4 @@
+/*
 podTemplate(containers: [
     containerTemplate(name: 'kaniko', image: 'gcr.io/kaniko-project/executor:debug', ttyEnabled: true, command: 'cat')
   ]) {
@@ -10,13 +11,15 @@ podTemplate(containers: [
             container('kaniko') {
                 stage('Build the image') {
                 sh"""#!/busybox/sh
-                /kaniko/executor -f ./dockerfile -c `pwd` --destination=registry.default.svc.cluster.local/bjss-node:1.0.0 --verbosity=debug
+                ls
+                #/kaniko/executor -f ./dockerfile -c `pwd` --destination=registry.default.svc.cluster.local/bjss-node:1.0.0 --verbosity=debug
                 """
                 }
             }
         }
     }
 }
+*/
 
 podTemplate(containers: [
     containerTemplate(name: 'bjss-node', image: 'registry.default.svc.cluster.local/bjss-node:1.0.0', args: "index.js")
@@ -31,21 +34,29 @@ podTemplate(containers: [
             sh(script: "test/test.sh")
         }
 
-        if(! BRANCH_NAME.startWith("PR-"){
-            stage("push"){
-                withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
+        if(BRANCH_NAME.startsWith("PR-")){
+            withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
+                stage("push"){
                     sh"""
-                    env
                     git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
-                    git push -u github ${BRANCH_NAME}
+                    git checkout -b ${CHANGE_BRANCH}
+                    git push -u github ${CHANGE_BRANCH}
                     """
                 }
-            }
 
-            stage("Create PR"){
-                sh"""
-                env
-                """
+                stage("Create PR"){
+                    sh"""
+                    curl -XPOST -d@- -H "Content-Type: application/json" -H "Authorization: Token ${PAT}" 'https://api.github.com/repos/shin-imai/cicd-training/pulls' <<EOF
+{
+  "title": "Amazing new feature",
+  "body": "Please pull these awesome changes in!",
+  "head": "${CHANGE_BRANCH}",
+  "base": "${CHANGE_TARGET}"
+}
+
+EOF
+                    """
+                }
             }
         }
     }
