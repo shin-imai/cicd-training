@@ -38,8 +38,10 @@ podTemplate(containers: [
             withCredentials([usernamePassword(credentialsId: 'githubPAT', usernameVariable: "USER", passwordVariable: 'PAT')]) {
                 stage("push"){
                     sh"""
-                    git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
                     git checkout -b ${CHANGE_BRANCH}
+                    git remote add github https://${PAT}@github.com/shin-imai/cicd-training.git
+                    git fetch github 
+                    git reset --hard HEAD^1
                     git push -u github ${CHANGE_BRANCH}
                     """
                 }
